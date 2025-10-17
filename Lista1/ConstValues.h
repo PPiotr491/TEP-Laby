@@ -1,0 +1,6 @@
+#ifndef TEP_CONSTVALUES_H
+#define TEP_CONSTVALUES_H
+
+const static int ZAD1_FILL_VALUE = 34;
+
+#endif //TEP_CONSTVALUES_H
