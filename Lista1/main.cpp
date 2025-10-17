@@ -1,7 +1,7 @@
-#include "Zad123.h"
-#include "ConstValues.h"
-
 #include <iostream>
+
+#include "ConstValues.h"
+#include "Table.h"
 
 // ZADANIE 1
 
@@ -75,6 +75,21 @@ bool DeallocTable2Dim(int ***tablePointer, const int sizeY) {
     return true;
 }
 
+// ZADANIE 4
+
+void modTab(Table *tabPointer, int newSize) {
+    std::cout<<"Before: "<<tabPointer->getLength()<<std::endl;
+    tabPointer->setLength(newSize);
+    std::cout<<"After: "<<tabPointer->getLength()<<std::endl;
+}
+
+void modTab(Table tab, int newSize) {
+    std::cout<<"Before: "<<tab.getLength()<<std::endl;
+    tab.setLength(newSize);
+    std::cout<<"After: "<<tab.getLength()<<std::endl;
+}
+
+
 
 int main() {
     AllocTableFill(10);
@@ -102,6 +117,19 @@ int main() {
             std::cout<<"Deallocation failed"<<std::endl;
         }
     }
+
+
+    Table bezp(); //konstruktor domyślny
+    Table parametr("Z parametrem", 10);
+    Table kopia(parametr);
+
+    kopia.setName("Nowa nazwa kopii");
+    kopia.setLength(12);
+
+    Table *klon = kopia.Clone();
+
+    modTab(&parametr, 6);
+    modTab(parametr, 6);
 
     return 0;
 }
