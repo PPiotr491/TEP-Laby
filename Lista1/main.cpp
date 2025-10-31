@@ -131,5 +131,8 @@ int main() {
     modTab(&parametr, 6);
     modTab(parametr, 6);
 
+    Table largeTable("Double Size", 9000);
+    largeTable.doubleSize();
+
     return 0;
 }

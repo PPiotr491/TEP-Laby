@@ -15,6 +15,7 @@ public:
 
     ~Table();
     Table *Clone();
+    bool doubleSize();
 
     void setName(std::string newName);
     bool setLength(int newLength);

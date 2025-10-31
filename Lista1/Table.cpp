@@ -27,11 +27,9 @@ Table::Table(std::string name, int length) {
 Table::Table(const Table &tableToCopy) {
     if (tableToCopy.array == NULL) {
         std::cout<<"Cannot copy from null array, creating default table"<<std::endl;
-        // this->name = DEFAULT_NAME;
-        // this->length = DEFAULT_LENGTH;
-        // this->array = new int[this->length];
-
-        new Table();
+        this->name = DEFAULT_NAME;
+        this->length = DEFAULT_LENGTH;
+        this->array = new int[this->length];
 
     } else {
         this->name = tableToCopy.name + "_copy";
@@ -93,3 +91,30 @@ bool Table::setLength(int newLength) {
     return true;
 }
 
+bool Table::doubleSize() {
+    std::cout<<"Doubling size"<<std::endl;
+
+    if (this->array == NULL || getLength() <= 0) {
+        std::cout<<"Cannot double size of null array"<<std::endl;
+        return false;
+    }
+
+    int newLength = getLength() * 2;
+    if (getLength() >= INT_MAX/2 || newLength <= 0) {
+        std::cout<<"Table length is too big"<<std::endl;
+        return false;
+    }
+
+    // int* tempArray = new int[newLength];
+    //
+    // for (int i = 0; i < getLength(); i++) {
+    //     tempArray[i] = this->array[i];
+    // }
+    //
+    // delete[] this->array;
+    //
+    // this->array = tempArray;
+    // this->length = newLength;
+
+    return true;
+}
