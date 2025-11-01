@@ -7,7 +7,7 @@ int main() {
 
     CNumber cnum0, cnum1;
     cnum0 = 368;
-    cnum1 = 1567;
+    cnum1 = 500;
     cnum0 = cnum1;
 
     std::cout<<std::endl;
@@ -18,4 +18,12 @@ int main() {
     CNumber cnum3 = cnum0 + cnum1;
     std::cout<<std::endl<<cnum3.toString();
     std::cout<<std::endl<<cnum0.toString();
+
+    CNumber cnum4 = cnum0 - cnum1;
+    std::cout<<std::endl<<cnum4.toString();
+    std::cout<<std::endl<<cnum0.toString();
+
+    delete number;
+
+    return 0;
 }

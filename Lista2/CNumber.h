@@ -15,17 +15,25 @@ public:
     CNumber(int length, int *numTable);
 
     ~CNumber();
-    // CNumber(const CNumber &toCopy);
+    CNumber(const CNumber &toCopy);
 
     CNumber& operator=(const int value);
     CNumber& operator=(const CNumber &other);
 
-    CNumber operator+(const CNumber &numToAdd);
-    CNumber operator-(const CNumber &numToAdd);
+    CNumber operator+(const CNumber &other);
+    CNumber operator-(const CNumber &other);
     CNumber operator*(const CNumber &numToAdd);
     CNumber operator/(const CNumber &numToAdd);
 
-    int *ExpandNumber(int newLength, const CNumber &numTable);
+    bool operator>(const CNumber &other);
+
+    bool operator<=(const CNumber &other);
+
+    bool operator<(const CNumber &other);
+
+    bool operator>=(const CNumber &other);
+
+    int *ExpandNumber(int newLength, const CNumber &numTable) const;
 
     std::string toString() const;
 
@@ -57,6 +65,8 @@ private:
     int length;
     int* numTable;
     bool isNegative;
+
+    int compare(const CNumber &other) const;
 };
 
 
