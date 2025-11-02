@@ -63,10 +63,10 @@ CNumber& CNumber::operator=(const int value) {
     setLength(newLen);
     setNumTable(newNumTable);
 
-    std::cout<<std::endl;
-    for (int i = 0; i < getLength(); i++) {
-        std::cout<<getNumTable()[i];
-    }
+    // std::cout<<std::endl;
+    // for (int i = 0; i < getLength(); i++) {
+    //     std::cout<<getNumTable()[i];
+    // }
 
     return *this;
 }
@@ -139,8 +139,23 @@ CNumber CNumber::operator+(const CNumber &other) {
     delete[] fstNum;
     delete[] secNum;
 
-    CNumber result(newLength, newNumber, newIsNegative);
-    delete[] newNumber;  // Zwolnij pamięć po skopiowaniu do konstruktora
+    // Usuń zera wiodące (ale zostaw przynajmniej jedną cyfrę)
+    int firstNonZero = 0;
+    while (firstNonZero < newLength - 1 && newNumber[firstNonZero] == 0) {
+        firstNonZero++;
+    }
+
+    // Jeśli są zera wiodące, utwórz nową tablicę bez nich
+    int finalLength = newLength - firstNonZero;
+    int* finalNumber = new int[finalLength];
+    for (int i = 0; i < finalLength; i++) {
+        finalNumber[i] = newNumber[firstNonZero + i];
+    }
+
+    delete[] newNumber;
+
+    CNumber result(finalLength, finalNumber, newIsNegative);
+    delete[] finalNumber;
 
     return result;
 }
@@ -208,16 +223,187 @@ CNumber CNumber::operator-(const CNumber &other) {
     delete[] fstNum;
     delete[] secNum;
 
-    CNumber result(newLength, newNumber, newIsNegative);
+    // Usuń zera wiodące (ale zostaw przynajmniej jedną cyfrę)
+    int firstNonZero = 0;
+    while (firstNonZero < newLength - 1 && newNumber[firstNonZero] == 0) {
+        firstNonZero++;
+    }
+
+    // Jeśli są zera wiodące, utwórz nową tablicę bez nich
+    int finalLength = newLength - firstNonZero;
+    int* finalNumber = new int[finalLength];
+    for (int i = 0; i < finalLength; i++) {
+        finalNumber[i] = newNumber[firstNonZero + i];
+    }
+
     delete[] newNumber;
+
+    CNumber result(finalLength, finalNumber, newIsNegative);
+    delete[] finalNumber;
 
     return result;
 }
 
-CNumber CNumber::operator*(const CNumber &numToAdd) {
+CNumber CNumber::operator*(const CNumber &other) {
+    bool newIsNegative = false;
+
+    // oba dodatnie lub oba ujemne
+    if ((!this->getIsNegative() && !other.getIsNegative()) || (this->getIsNegative() && other.getIsNegative())) {
+        newIsNegative = false;
+    } else {
+        newIsNegative = true;
+    }
+
+    // Wynik mnożenia może mieć długość sumy długości obu liczb
+    int resultLength = this->getLength() + other.getLength();
+    int* newNumber = new int[resultLength]();
+
+    // Mnożenie każdej cyfry z każdą
+    for (int i = this->getLength() - 1; i >= 0; i--) {
+        for (int j = other.getLength() - 1; j >= 0; j--) {
+            int pos = i + j + 1; // Pozycja w tablicy wynikowej
+            newNumber[pos] += this->getNumTable()[i] * other.getNumTable()[j];
+
+            // Propaguj przeniesienie
+            if (newNumber[pos] >= NUMERICAL_SYSTEM) {
+                newNumber[pos - 1] += newNumber[pos] / NUMERICAL_SYSTEM;
+                newNumber[pos] = newNumber[pos] % NUMERICAL_SYSTEM;
+            }
+        }
+    }
+
+    // Usuń zera wiodące (ale zostaw przynajmniej jedną cyfrę)
+    int firstNonZero = 0;
+    while (firstNonZero < resultLength - 1 && newNumber[firstNonZero] == 0) {
+        firstNonZero++;
+    }
+
+    // Jeśli są zera wiodące, utwórz nową tablicę bez nich
+    int finalLength = resultLength - firstNonZero;
+    int* finalNumber = new int[finalLength];
+    for (int i = 0; i < finalLength; i++) {
+        finalNumber[i] = newNumber[firstNonZero + i];
+    }
+
+    delete[] newNumber;
+
+    CNumber result(finalLength, finalNumber, newIsNegative);
+    delete[] finalNumber;
+
+    return result;
 }
 
-CNumber CNumber::operator/(const CNumber &numToAdd) {
+CNumber CNumber::operator/(const CNumber &other) {
+    // Sprawdź dzielenie przez zero
+    if (other.getLength() == 1 && other.getNumTable()[0] == 0) {
+        std::cout << "Error: Division by zero!" << std::endl;
+        CNumber zero;
+        zero = 0;
+        return zero;
+    }
+
+    // Utwórz pozytywne wersje liczb do obliczeń
+    CNumber dividend(this->getLength(), this->getNumTable(), false);
+    CNumber divisor(other.getLength(), other.getNumTable(), false);
+
+    // Jeśli dzielna jest mniejsza od dzielnika, wynik to 0
+    if (dividend < divisor) {
+        CNumber zero;
+        zero = 0;
+        return zero;
+    }
+
+    // Wynik dzielenia
+    int* newNumber = new int[this->getLength()];
+    int resultLength = 0;
+
+    // Reszta z dzielenia
+    CNumber remainder;
+    remainder = 0;
+
+    // Dzielenie pisemne - przetwarzaj cyfrę po cyfrze
+    for (int i = 0; i < dividend.getLength(); i++) {
+        // Przesuń remainder w lewo (mnożenie przez 10) i dodaj następną cyfrę
+        int* newRemainderTable = new int[remainder.getLength() + 1];
+        for (int j = 0; j < remainder.getLength(); j++) {
+            newRemainderTable[j] = remainder.getNumTable()[j];
+        }
+        newRemainderTable[remainder.getLength()] = dividend.getNumTable()[i];
+
+        CNumber oldRemainder = remainder;
+        remainder = CNumber(remainder.getLength() + 1, newRemainderTable, false);
+        delete[] newRemainderTable;
+
+        // Znajdź ile razy divisor mieści się w remainder
+        int digitResult = 0;
+        CNumber temp;
+        temp = 0;
+
+        int d = 0;
+        while (temp <= remainder && d <= 9) {
+            CNumber multiplier;
+            multiplier = d;
+            temp = divisor * multiplier;
+            if (temp <= remainder) {
+                digitResult = d;
+                d++;
+            }
+        }
+        // for (int d = 0; d <= 9; d++) {
+        //     CNumber multiplier;
+        //     multiplier = d;
+        //     temp = divisor * multiplier;
+        //
+        //     if (temp > remainder) {
+        //         break;
+        //     }
+        //     digitResult = d;
+        // }
+
+        // Zapisz cyfrę wyniku
+        newNumber[resultLength++] = digitResult;
+
+        // Oblicz nową resztę
+        CNumber mult;
+        mult = digitResult;
+        CNumber subtrahend = divisor * mult;
+        remainder = remainder - subtrahend;
+    }
+
+    // Jeśli nie ma cyfr w wyniku, zwróć 0
+    if (resultLength == 0) {
+        delete[] newNumber;
+        CNumber zero;
+        zero = 0;
+        return zero;
+    }
+
+    // Usuń zera wiodące (ale zostaw przynajmniej jedną cyfrę)
+    int firstNonZero = 0;
+    while (firstNonZero < resultLength - 1 && newNumber[firstNonZero] == 0) {
+        firstNonZero++;
+    }
+
+    // Jeśli są zera wiodące, utwórz nową tablicę bez nich
+    int finalLength = resultLength - firstNonZero;
+    int* finalDigits = new int[finalLength];
+    for (int i = 0; i < finalLength; i++) {
+        finalDigits[i] = newNumber[firstNonZero + i];
+    }
+
+    delete[] newNumber;
+
+    // Określ znak wyniku
+    bool newIsNegative = false;
+    if ((!this->getIsNegative() && other.getIsNegative()) ||
+        (this->getIsNegative() && !other.getIsNegative())) {
+        newIsNegative = true;
+    }
+
+    CNumber result(finalLength, finalDigits, newIsNegative);
+    delete[] finalDigits;
+
+    return result;
 }
 
 int CNumber::compare(const CNumber &other) const {

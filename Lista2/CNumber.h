@@ -6,7 +6,7 @@
 class CNumber {
     const static int NUMERICAL_SYSTEM = 10;
     const static int MAX_NUMBER_VALUE = NUMERICAL_SYSTEM - 1;
-    const static int DEFAULT_SIZE = 4;
+    const static int DEFAULT_SIZE = 1;
 public:
     CNumber();
 
@@ -23,7 +23,7 @@ public:
     CNumber operator+(const CNumber &other);
     CNumber operator-(const CNumber &other);
     CNumber operator*(const CNumber &numToAdd);
-    CNumber operator/(const CNumber &numToAdd);
+    CNumber operator/(const CNumber &other);
 
     bool operator>(const CNumber &other);
 
