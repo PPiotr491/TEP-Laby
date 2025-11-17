@@ -1,6 +1,6 @@
 #ifndef TEP_EQUATIONTREE_H
 #define TEP_EQUATIONTREE_H
-#include "Node.h"
+#include "Nodes/Node.h"
 #include <string>
 
 

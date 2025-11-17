@@ -10,7 +10,7 @@ public:
     Node(std::string value, Node* leftChild, Node* rightChild, Node* parent);
     Node(const Node& nodeToCopy);
 
-    ~Node();
+    virtual ~Node() = 0;
 
     std::string getValue() const {
         return value;
@@ -47,7 +47,7 @@ public:
 private:
     std::string value;
     Node* leftChild;
-    Node* rightChild;
+    Node* rightChild; // lub vector jeśli jest więcej niż dwa argumenty
     Node* parent;
 };
 
