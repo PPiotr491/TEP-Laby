@@ -104,10 +104,11 @@ CNumber CNumber::operator+(const CNumber &other) {
         return this->operator-(positiveOther);
     }
 
-    // Przypadek: (-a) + b = a - b
+    // Przypadek: (-a) + b = -(a - b)
     if (this->getIsNegative() && !other.getIsNegative()) {
         CNumber positiveThis(this->getLength(), this->getNumTable(), false);
         CNumber result = positiveThis.operator-(other);
+        result.setIsNegative(true);
         return result;
     }
 
@@ -349,16 +350,6 @@ CNumber CNumber::operator/(const CNumber &other) {
                 d++;
             }
         }
-        // for (int d = 0; d <= 9; d++) {
-        //     CNumber multiplier;
-        //     multiplier = d;
-        //     temp = divisor * multiplier;
-        //
-        //     if (temp > remainder) {
-        //         break;
-        //     }
-        //     digitResult = d;
-        // }
 
         // Zapisz cyfrę wyniku
         newNumber[resultLength++] = digitResult;
@@ -404,6 +395,20 @@ CNumber CNumber::operator/(const CNumber &other) {
     delete[] finalDigits;
 
     return result;
+}
+
+CNumber CNumber::operator!() {
+    CNumber resultCNum;
+    CNumber temp;
+    resultCNum = 1;
+
+    for (int i = 0; i < getLength(); i++) {
+        temp = getNumTable()[i];
+        resultCNum = resultCNum * temp;
+    }
+
+    resultCNum.setIsNegative(this->getIsNegative());
+    return resultCNum;
 }
 
 int CNumber::compare(const CNumber &other) const {

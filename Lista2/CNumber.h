@@ -25,6 +25,8 @@ public:
     CNumber operator*(const CNumber &numToAdd);
     CNumber operator/(const CNumber &other);
 
+    CNumber operator!();
+
     bool operator>(const CNumber &other);
 
     bool operator<=(const CNumber &other);
