@@ -1,14 +1,25 @@
-//
-// Created by Super on 17.11.2025.
-//
-
 #ifndef TEP_CONSTNODE_H
 #define TEP_CONSTNODE_H
 #include "Node.h"
 
 
-class ConstNode : Node {
+class ConstNode : public Node {
+public:
+    ConstNode(double value);
 
+    double evaluate(const std::map<std::string, double>& variables) const;
+    std::string toString() const;
+    void collectVariables(std::vector<std::string>& variables) const;
+    bool isLeaf() const;
+    std::vector<Node*> getChildren() const;
+    Node* clone() const;
+
+    double getValue() const {
+        return value;
+    }
+
+private:
+    double value;
 };
 
 

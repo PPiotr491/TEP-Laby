@@ -3,12 +3,21 @@ project(TEP)
 
 set(CMAKE_CXX_STANDARD 98)
 
-add_executable(TEP
+# Lista 1
+add_executable(Lista1
         Lista1/main.cpp
         Lista1/ConstValues.h
         Lista1/Table.cpp
         Lista1/Table.h
+)
+
+# Lista 2
+add_executable(Lista2
         Lista2/Main.cpp
+)
+
+# Lista 3
+add_executable(Lista3
         Lista3/Main.cpp
         Lista3/Nodes/Node.cpp
         Lista3/Nodes/Node.h
@@ -30,4 +39,10 @@ add_executable(TEP
         Lista3/Nodes/BinominalOperatorNode.h
         Lista3/Nodes/MonominalOperatorNode.cpp
         Lista3/Nodes/MonominalOperatorNode.h
+        Lista3/Parser.cpp
+        Lista3/Parser.h
+        Lista3/Nodes/OperatorNodes/SinOpNode.cpp
+        Lista3/Nodes/OperatorNodes/SinOpNode.h
+        Lista3/Nodes/OperatorNodes/CosOpNode.cpp
+        Lista3/Nodes/OperatorNodes/CosOpNode.h
 )

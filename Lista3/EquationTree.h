@@ -2,34 +2,47 @@
 #define TEP_EQUATIONTREE_H
 #include "Nodes/Node.h"
 #include <string>
-
+#include <vector>
 
 class EquationTree {
-
 public:
     EquationTree();
-    EquationTree(std::string equation);
-    EquationTree(const EquationTree& nodeToCopy);
+    EquationTree(const EquationTree& treeToCopy);
+    ~EquationTree();
 
-    EquationTree& operator=(const int value);
-    EquationTree& operator+(const EquationTree &other);
+    // Metody główne
+    std::string enter(const std::string& formula);
+    std::string vars() const;
+    std::string print() const;
+    double comp(const std::vector<double>& values) const;
+    std::string join(const std::string& formula);
 
-    Node getRoot() const {
+    Node* getRoot() const {
         return root;
     }
 
-    void setRoot(const Node &root) {
+    void setRoot(Node* root) {
         this->root = root;
     }
 
-private:
-    Node root;
+    // Zwraca listę zmiennych w drzewie
+    std::vector<std::string> getVariables() const;
 
-    std::string enterNewEquation(std::string equation);
-    std::string vars();
-    std::string print();
-    double comp(double* varTable);
-    void join(std::string);
+    // Operatory
+    EquationTree& operator=(const EquationTree& other);
+    EquationTree operator+(const EquationTree& other) const;
+
+private:
+    Node* root;
+
+    // Metoda pomocnicza do znajdowania dowolnego liścia w drzewie
+    Node* findAnyLeaf(Node* node) const;
+
+    // Metoda pomocnicza do klonowania drzewa
+    Node* cloneTree(Node* node) const;
+
+    // Metoda pomocnicza do zastępowania zmiennych stałymi w drzewie (statyczna)
+    static void replaceVariablesWithValues(Node* node, const std::vector<std::string>& variables, const std::vector<double>& values);
 };
 
 

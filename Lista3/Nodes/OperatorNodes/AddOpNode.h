@@ -1,14 +1,14 @@
-//
-// Created by Super on 17.11.2025.
-//
-
 #ifndef TEP_ADDOPNODE_H
 #define TEP_ADDOPNODE_H
 #include "../BinominalOperatorNode.h"
 
 
-class AddOpNode : BinominalOperatorNode
-{
+class AddOpNode : public BinominalOperatorNode {
+public:
+    AddOpNode(Node* left, Node* right);
+
+    double evaluate(const std::map<std::string, double>& variables) const;
+    Node* clone() const;
 };
 
 

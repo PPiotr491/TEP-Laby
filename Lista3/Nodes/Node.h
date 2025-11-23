@@ -1,39 +1,42 @@
 #ifndef TEP_NODE_H
 #define TEP_NODE_H
 #include <string>
+#include <vector>
+#include <map>
 
 
 class Node {
 public:
     Node();
-    Node(std::string value);
-    Node(std::string value, Node* leftChild, Node* rightChild, Node* parent);
+    Node(std::string name);
     Node(const Node& nodeToCopy);
 
-    virtual ~Node() = 0;
+    virtual ~Node();
 
-    std::string getValue() const {
-        return value;
+    // Metoda wirtualna do obliczania wartości węzła
+    virtual double evaluate(const std::map<std::string, double>& variables) const = 0;
+
+    // Metoda do wyświetlania drzewa (opcjonalna, pomocna przy debugowaniu)
+    virtual std::string toString() const = 0;
+
+    // Metoda do zbierania zmiennych
+    virtual void collectVariables(std::vector<std::string>& variables) const = 0;
+
+    // Metoda sprawdzająca czy węzeł jest liściem
+    virtual bool isLeaf() const = 0;
+
+    // Metoda do pobierania dzieci węzła (dla operatorów)
+    virtual std::vector<Node*> getChildren() const = 0;
+
+    // Metoda do klonowania węzła (tworzy głęboką kopię)
+    virtual Node* clone() const = 0;
+
+    std::string getName() const {
+        return name;
     }
 
-    void setValue(const std::string &value) {
-        this->value = value;
-    }
-
-    Node* getLeftChild() const {
-        return leftChild;
-    }
-
-    void setLeftChild(Node *leftChild) {
-        this->leftChild = leftChild;
-    }
-
-    Node* getRightChild() const {
-        return rightChild;
-    }
-
-    void setRightChild(Node *rightChild) {
-        this->rightChild = rightChild;
+    void setName(const std::string name) {
+        this->name = name;
     }
 
     Node* getParent() const {
@@ -45,9 +48,7 @@ public:
     }
 
 private:
-    std::string value;
-    Node* leftChild;
-    Node* rightChild; // lub vector jeśli jest więcej niż dwa argumenty
+    std::string name;
     Node* parent;
 };
 

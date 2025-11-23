@@ -1,13 +1,13 @@
-//
-// Created by Super on 17.11.2025.
-//
-
 #ifndef TEP_MULTOPNODE_H
 #define TEP_MULTOPNODE_H
 #include "../BinominalOperatorNode.h"
 
-class MultOpNode : BinominalOperatorNode
-{
+class MultOpNode : public BinominalOperatorNode {
+public:
+    MultOpNode(Node* left, Node* right);
+
+    double evaluate(const std::map<std::string, double>& variables) const;
+    Node* clone() const;
 };
 
 

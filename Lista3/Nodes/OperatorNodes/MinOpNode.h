@@ -6,8 +6,12 @@
 #define TEP_MINOPNODE_H
 #include "../BinominalOperatorNode.h"
 
-class MinOpNode : BinominalOperatorNode
-{
+class MinOpNode : public BinominalOperatorNode {
+public:
+    MinOpNode(Node* left, Node* right);
+
+    double evaluate(const std::map<std::string, double>& variables) const;
+    Node* clone() const;
 };
 
 
