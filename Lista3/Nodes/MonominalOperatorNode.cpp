@@ -8,7 +8,8 @@ MonominalOperatorNode::MonominalOperatorNode() {
 MonominalOperatorNode::MonominalOperatorNode(std::string name, Node* c) {
     setName(name);
     child = c;
-    if (child) child->setParent(this);
+    if (child)
+        child->setParent(this);
 }
 
 MonominalOperatorNode::~MonominalOperatorNode() {
@@ -22,7 +23,8 @@ std::string MonominalOperatorNode::toString() const {
 }
 
 void MonominalOperatorNode::collectVariables(std::vector<std::string>& variables) const {
-    if (child) child->collectVariables(variables);
+    if (child)
+        child->collectVariables(variables);
 }
 
 bool MonominalOperatorNode::isLeaf() const {
@@ -31,6 +33,7 @@ bool MonominalOperatorNode::isLeaf() const {
 
 std::vector<Node*> MonominalOperatorNode::getChildren() const {
     std::vector<Node*> children;
-    if (child) children.push_back(child);
+    if (child)
+        children.push_back(child);
     return children;
 }

@@ -7,7 +7,7 @@ class ConstNode : public Node {
 public:
     ConstNode(double value);
 
-    double evaluate(const std::map<std::string, double>& variables) const;
+    double evaluate() const;
     std::string toString() const;
     void collectVariables(std::vector<std::string>& variables) const;
     bool isLeaf() const;

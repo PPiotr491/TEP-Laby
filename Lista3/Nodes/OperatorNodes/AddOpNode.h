@@ -7,7 +7,7 @@ class AddOpNode : public BinominalOperatorNode {
 public:
     AddOpNode(Node* left, Node* right);
 
-    double evaluate(const std::map<std::string, double>& variables) const;
+    double evaluate() const;
     Node* clone() const;
 };
 

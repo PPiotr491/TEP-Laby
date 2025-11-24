@@ -27,8 +27,10 @@ std::string BinominalOperatorNode::toString() const {
 }
 
 void BinominalOperatorNode::collectVariables(std::vector<std::string>& variables) const {
-    if (leftChild) leftChild->collectVariables(variables);
-    if (rightChild) rightChild->collectVariables(variables);
+    if (leftChild)
+        leftChild->collectVariables(variables);
+    if (rightChild)
+        rightChild->collectVariables(variables);
 }
 
 bool BinominalOperatorNode::isLeaf() const {

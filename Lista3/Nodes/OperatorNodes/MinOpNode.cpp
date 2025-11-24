@@ -5,8 +5,8 @@ MinOpNode::MinOpNode(Node* left, Node* right)
 {
 }
 
-double MinOpNode::evaluate(const std::map<std::string, double>& variables) const {
-    return getLeftChild()->evaluate(variables) - getRightChild()->evaluate(variables);
+double MinOpNode::evaluate() const {
+    return getLeftChild()->evaluate() - getRightChild()->evaluate();
 }
 
 Node* MinOpNode::clone() const {

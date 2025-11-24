@@ -1,7 +1,3 @@
-//
-// Created by Super on 19.11.2025.
-//
-
 #include "CosOpNode.h"
 #include <cmath>
 
@@ -10,8 +6,8 @@ CosOpNode::CosOpNode(Node* child)
 {
 }
 
-double CosOpNode::evaluate(const std::map<std::string, double>& variables) const {
-    return std::cos(getChild()->evaluate(variables));
+double CosOpNode::evaluate() const {
+    return std::cos(getChild()->evaluate());
 }
 
 Node* CosOpNode::clone() const {

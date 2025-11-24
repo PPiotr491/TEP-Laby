@@ -5,8 +5,8 @@ MultOpNode::MultOpNode(Node* left, Node* right)
 {
 }
 
-double MultOpNode::evaluate(const std::map<std::string, double>& variables) const {
-    return getLeftChild()->evaluate(variables) * getRightChild()->evaluate(variables);
+double MultOpNode::evaluate() const {
+    return getLeftChild()->evaluate() * getRightChild()->evaluate();
 }
 
 Node* MultOpNode::clone() const {

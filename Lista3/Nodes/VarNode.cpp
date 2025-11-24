@@ -5,12 +5,9 @@ VarNode::VarNode(const std::string& varName) {
     this->variableName = varName;
 }
 
-double VarNode::evaluate(const std::map<std::string, double>& variables) const {
-    std::map<std::string, double>::const_iterator it = variables.find(variableName);
-    if (it != variables.end()) {
-        return it->second;
-    }
-    throw std::runtime_error("Variable '" + variableName + "' not found in variables map");
+// VarNode jest zamieniany na ConstNode, więc evaluate nigdy nie będzie wywołany
+double VarNode::evaluate() const {
+    return 0.0;
 }
 
 std::string VarNode::toString() const {
@@ -26,6 +23,7 @@ void VarNode::collectVariables(std::vector<std::string>& variables) const {
             break;
         }
     }
+
     // Jeśli nie znaleziono, dodaj
     if (!found) {
         variables.push_back(variableName);

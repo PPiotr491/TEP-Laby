@@ -2,7 +2,6 @@
 #define TEP_NODE_H
 #include <string>
 #include <vector>
-#include <map>
 
 
 class Node {
@@ -14,9 +13,9 @@ public:
     virtual ~Node();
 
     // Metoda wirtualna do obliczania wartości węzła
-    virtual double evaluate(const std::map<std::string, double>& variables) const = 0;
+    virtual double evaluate() const = 0;
 
-    // Metoda do wyświetlania drzewa (opcjonalna, pomocna przy debugowaniu)
+    // Metoda do wyświetlania drzewa
     virtual std::string toString() const = 0;
 
     // Metoda do zbierania zmiennych
@@ -25,10 +24,10 @@ public:
     // Metoda sprawdzająca czy węzeł jest liściem
     virtual bool isLeaf() const = 0;
 
-    // Metoda do pobierania dzieci węzła (dla operatorów)
+    // Metoda do pobierania dzieci węzła
     virtual std::vector<Node*> getChildren() const = 0;
 
-    // Metoda do klonowania węzła (tworzy głęboką kopię)
+    // Metoda do klonowania węzła
     virtual Node* clone() const = 0;
 
     std::string getName() const {

@@ -10,7 +10,7 @@ class MinOpNode : public BinominalOperatorNode {
 public:
     MinOpNode(Node* left, Node* right);
 
-    double evaluate(const std::map<std::string, double>& variables) const;
+    double evaluate() const;
     Node* clone() const;
 };
 

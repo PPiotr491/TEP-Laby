@@ -86,7 +86,6 @@ Node* Parser::parseNode(std::istringstream& iss, bool& isValid, std::ostringstre
 
     // Sprawdź czy są jeszcze tokeny
     if (!(iss >> token)) {
-        // Brak tokenów - błąd, zwróć domyślną wartość
         isValid = false;
         if (!firstToken) {
             fixedStream << " ";
@@ -107,11 +106,9 @@ Node* Parser::parseNode(std::istringstream& iss, bool& isValid, std::ostringstre
         int arity = getOperatorArity(token);
 
         if (arity == 1) {
-            // Operator jednoargumentowy (sin, cos)
             Node* child = parseNode(iss, isValid, fixedStream, firstToken);
             return createUnaryOperatorNode(token, child);
         } else if (arity == 2) {
-            // Operator dwuargumentowy (+, -, *, /)
             Node* left = parseNode(iss, isValid, fixedStream, firstToken);
             Node* right = parseNode(iss, isValid, fixedStream, firstToken);
             return createOperatorNode(token, left, right);
@@ -126,7 +123,6 @@ Node* Parser::parse(const std::string& expression, bool& isValid, std::string& c
     isValid = true;
     correctedExpression = "";
 
-    // Pusta formula
     if (expression.empty() || expression.find_first_not_of(" \t\n\r") == std::string::npos) {
         isValid = false;
         correctedExpression = "1";
@@ -140,67 +136,8 @@ Node* Parser::parse(const std::string& expression, bool& isValid, std::string& c
     // Parsuj rekurencyjnie od korzenia
     Node* root = parseNode(iss, isValid, fixedStream, firstToken);
 
-    // Sprawdź czy zostały nieużyte tokeny
-    std::string extraToken;
-    if (iss >> extraToken) {
-        // Są dodatkowe tokeny - to błąd, ale muszą być przetworzone
-        isValid = false;
-
-        // Zapisz obecne skorygowane wyrażenie
-        std::string firstExpression = fixedStream.str();
-        fixedStream.str("");
-        fixedStream.clear();
-
-        // Parsuj pozostałe tokeny
-        do {
-            // Dodaj operator + na początku
-            fixedStream << "+ " << firstExpression;
-
-            // Parsuj następne wyrażenie
-            std::ostringstream secondStream;
-            bool secondFirstToken = true;
-
-            // Sprawdź czy to operator czy wartość
-            if (isOperator(extraToken)) {
-                secondStream << extraToken;
-                secondFirstToken = false;
-
-                // Parsuj jego argumenty
-                int arity = getOperatorArity(extraToken);
-                if (arity == 1) {
-                    Node* child = parseNode(iss, isValid, secondStream, secondFirstToken);
-                    Node* opNode = createUnaryOperatorNode(extraToken, child);
-                    root = new AddOpNode(root, opNode);
-                } else if (arity == 2) {
-                    Node* left = parseNode(iss, isValid, secondStream, secondFirstToken);
-                    Node* right = parseNode(iss, isValid, secondStream, secondFirstToken);
-                    Node* opNode = createOperatorNode(extraToken, left, right);
-                    root = new AddOpNode(root, opNode);
-                }
-            } else {
-                // To wartość - utwórz węzeł liścia
-                secondStream << extraToken;
-                Node* leafNode = createLeafNode(extraToken);
-                root = new AddOpNode(root, leafNode);
-            }
-
-            // Dodaj drugie wyrażenie do strumienia
-            fixedStream << " " << secondStream.str();
-
-            // Przygotuj się do następnej iteracji
-            firstExpression = fixedStream.str();
-            fixedStream.str("");
-            fixedStream.clear();
-        } while (iss >> extraToken);
-
-        correctedExpression = firstExpression;
-    } else {
-        correctedExpression = fixedStream.str();
-    }
-
-
-    // isValid = false;
-    // correctedExpression = fixedStream.str();
+    isValid = false;
+    correctedExpression = fixedStream.str();
 
     return root;
 }

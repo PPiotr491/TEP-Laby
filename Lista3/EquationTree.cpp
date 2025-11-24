@@ -1,11 +1,13 @@
 #include "EquationTree.h"
+
+#include <cmath>
+
 #include "Parser.h"
 #include "Nodes/BinominalOperatorNode.h"
 #include "Nodes/MonominalOperatorNode.h"
 #include "Nodes/VarNode.h"
 #include "Nodes/ConstNode.h"
 #include <iostream>
-#include <map>
 
 EquationTree::EquationTree() {
     root = NULL;
@@ -80,9 +82,8 @@ double EquationTree::comp(const std::vector<double>& values) const {
     // Zamień wszystkie zmienne na stałe w sklonowanym drzewie
     replaceVariablesWithValues(tempRoot, variables, values);
 
-    // Oblicz wartość (bez użycia mapy - węzły VarNode zostały zamienione na ConstNode)
-    std::map<std::string, double> emptyMap;
-    double result = tempRoot->evaluate(emptyMap);
+    // Oblicz wartość (wszystkie VarNode zostały zamienione na ConstNode)
+    double result = tempRoot->evaluate();
 
     // Usuń tymczasowe drzewo
     delete tempRoot;
@@ -163,7 +164,6 @@ std::string EquationTree::join(const std::string& formula) {
     EquationTree newEquationTree;
     newEquationTree.root = newTree;
 
-    // Użyj operatora + do połączenia drzew, a następnie = do przypisania
     *this = *this + newEquationTree;
 
     // Zapobiegnij podwójnemu usunięciu
@@ -223,7 +223,6 @@ void EquationTree::replaceVariablesWithValues(Node* node, const std::vector<std:
                 ConstNode* constNode = new ConstNode(values[i]);
 
                 if (parent != NULL) {
-                    // Zamień węzeł u rodzica
                     BinominalOperatorNode* binParent = dynamic_cast<BinominalOperatorNode*>(parent);
                     if (binParent != NULL) {
                         std::vector<Node*> children = binParent->getChildren();

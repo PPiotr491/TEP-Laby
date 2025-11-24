@@ -7,7 +7,7 @@ ConstNode::ConstNode(double val) {
     this->value = val;
 }
 
-double ConstNode::evaluate(const std::map<std::string, double>& variables) const {
+double ConstNode::evaluate() const {
     return value;
 }
 
@@ -18,7 +18,7 @@ std::string ConstNode::toString() const {
 }
 
 void ConstNode::collectVariables(std::vector<std::string>& variables) const {
-    // Stała nie ma zmiennych - nic nie rób
+    // Stała nie ma zmiennych. Nic nie rób
 }
 
 bool ConstNode::isLeaf() const {

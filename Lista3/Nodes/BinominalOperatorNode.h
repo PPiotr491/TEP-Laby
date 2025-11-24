@@ -11,7 +11,7 @@ public:
     virtual ~BinominalOperatorNode();
 
     // Implementacja metody z klasy bazowej (można nadpisać w podklasach)
-    virtual double evaluate(const std::map<std::string, double>& variables) const = 0;
+    virtual double evaluate() const = 0;
     virtual std::string toString() const;
     virtual void collectVariables(std::vector<std::string>& variables) const;
     virtual bool isLeaf() const;

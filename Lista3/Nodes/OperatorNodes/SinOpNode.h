@@ -7,7 +7,7 @@ class SinOpNode : public MonominalOperatorNode {
 public:
     SinOpNode(Node* child);
 
-    double evaluate(const std::map<std::string, double>& variables) const;
+    double evaluate() const;
     Node* clone() const;
 };
 

@@ -1,7 +1,3 @@
-//
-// Created by Super on 19.11.2025.
-//
-
 #include "SinOpNode.h"
 #include <cmath>
 
@@ -10,8 +6,8 @@ SinOpNode::SinOpNode(Node* child)
 {
 }
 
-double SinOpNode::evaluate(const std::map<std::string, double>& variables) const {
-    return std::sin(getChild()->evaluate(variables));
+double SinOpNode::evaluate() const {
+    return std::sin(getChild()->evaluate());
 }
 
 Node* SinOpNode::clone() const {

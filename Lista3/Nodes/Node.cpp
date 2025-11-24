@@ -17,4 +17,3 @@ Node::Node(const Node& nodeToCopy) {
 
 Node::~Node() {
 }
-

@@ -1,8 +1,6 @@
-//
-// Created by Super on 17.11.2025.
-//
-
 #include "DivOpNode.h"
+
+#include <limits>
 #include <stdexcept>
 
 DivOpNode::DivOpNode(Node* left, Node* right)
@@ -10,12 +8,12 @@ DivOpNode::DivOpNode(Node* left, Node* right)
 {
 }
 
-double DivOpNode::evaluate(const std::map<std::string, double>& variables) const {
-    double divisor = getRightChild()->evaluate(variables);
+double DivOpNode::evaluate() const {
+    double divisor = getRightChild()->evaluate();
     if (divisor == 0.0) {
-        throw std::runtime_error("Division by zero");
+        return std::numeric_limits<double>::quiet_NaN();
     }
-    return getLeftChild()->evaluate(variables) / divisor;
+    return getLeftChild()->evaluate() / divisor;
 }
 
 Node* DivOpNode::clone() const {

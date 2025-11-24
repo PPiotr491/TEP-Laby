@@ -5,8 +5,8 @@ AddOpNode::AddOpNode(Node* left, Node* right)
 {
 }
 
-double AddOpNode::evaluate(const std::map<std::string, double>& variables) const {
-    return getLeftChild()->evaluate(variables) + getRightChild()->evaluate(variables);
+double AddOpNode::evaluate() const {
+    return getLeftChild()->evaluate() + getRightChild()->evaluate();
 }
 
 Node* AddOpNode::clone() const {

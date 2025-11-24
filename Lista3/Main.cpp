@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "EquationTree.h"
 #include <iostream>
 #include <sstream>
@@ -21,7 +23,6 @@ int main() {
     std::string line;
 
     std::cout << "Kalkulator drzew wyrazen (notacja polska)" << std::endl;
-    std::cout << "Przyklad: + 2 3  (oznacza 2 + 3)" << std::endl;
     std::cout << "Wpisz 'help' aby zobaczyc pomoc" << std::endl;
 
     while (true) {
@@ -39,7 +40,7 @@ int main() {
         std::string command;
         iss >> command;
 
-        if (command == "exit" || command == "quit") {
+        if (command == "exit") {
             std::cout << "Do widzenia!" << std::endl;
             break;
         } else if (command == "help") {
@@ -78,7 +79,12 @@ int main() {
             }
 
             double result = tree.comp(values);
-            std::cout << "Wynik: " << result << std::endl;
+
+            if (std::isnan(result)) {
+                std::cout << "Blad. Dzielenie przez 0";
+            } else {
+                std::cout << "Wynik: " << result << std::endl;
+            }
 
         } else if (command == "join") {
             std::string formula;
