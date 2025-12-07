@@ -1,6 +1,8 @@
 #ifndef TEP_EQUATIONTREE_H
 #define TEP_EQUATIONTREE_H
-#include "Nodes/Node.h"
+#include "../Tree/Nodes/Node.h"
+#include "../Result.tpp"
+#include "../Error.h"
 #include <string>
 #include <vector>
 
@@ -10,15 +12,15 @@ public:
     EquationTree(const EquationTree& treeToCopy);
     ~EquationTree();
 
-    std::string enter(const std::string& formula);
+    Result<void, Error> enter(const std::string& formula);
 
-    std::string vars() const;
+    Result<std::string, Error> vars() const;
 
-    std::string print() const;
+    Result<std::string, Error> print() const;
 
-    double comp(const std::vector<double>& values) const;
+    Result<double, Error> comp(const std::vector<double>& values) const;
 
-    std::string join(const std::string& formula);
+    Result<void, Error> join(const std::string& formula);
 
     Node* getRoot() const {
         return root;
@@ -29,7 +31,7 @@ public:
     }
 
     std::vector<std::string> getVariables() const;
-    std::string mr();
+    Result<std::string, Error> mr();
 
     EquationTree& operator=(const EquationTree& other);
     EquationTree operator+(const EquationTree& other) const;

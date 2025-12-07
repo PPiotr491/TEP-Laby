@@ -14,6 +14,7 @@ void printMenu() {
     std::cout << "  comp <v1> ...    - oblicz wartosc" << std::endl;
     std::cout << "  join <formula>   - dolacz nowa formule" << std::endl;
     std::cout << "  help             - wyswietl pomoc" << std::endl;
+    std::cout << "  mr               - zwraca lisc najbardziej po prawo" << std::endl;
     std::cout << "  exit             - zakoncz program" << std::endl;
     std::cout << "=================================" << std::endl;
 }
@@ -93,6 +94,9 @@ int main() {
                 formula = formula.substr(1);
             }
             std::cout << tree.join(formula);
+        } else if (command == "mr") {
+            std::string result = tree.mr();
+            std::cout << result << std::endl;
         } else {
             std::cout << "Nieznana komenda. Wpisz 'help' aby zobaczyc dostepne komendy." << std::endl;
         }

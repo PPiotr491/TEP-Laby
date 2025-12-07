@@ -1,12 +1,12 @@
 #include "Parser.h"
-#include "Nodes/ConstNode.h"
-#include "Nodes/VarNode.h"
-#include "Nodes/OperatorNodes/AddOpNode.h"
-#include "Nodes/OperatorNodes/MinOpNode.h"
-#include "Nodes/OperatorNodes/MultOpNode.h"
-#include "Nodes/OperatorNodes/DivOpNode.h"
-#include "Nodes/OperatorNodes/SinOpNode.h"
-#include "Nodes/OperatorNodes/CosOpNode.h"
+#include "../Tree/Nodes/ConstNode.h"
+#include "../Tree/Nodes/VarNode.h"
+#include "../Tree/Nodes/OperatorNodes/AddOpNode.h"
+#include "../Tree/Nodes/OperatorNodes/MinOpNode.h"
+#include "../Tree/Nodes/OperatorNodes/MultOpNode.h"
+#include "../Tree/Nodes/OperatorNodes/DivOpNode.h"
+#include "../Tree/Nodes/OperatorNodes/SinOpNode.h"
+#include "../Tree/Nodes/OperatorNodes/CosOpNode.h"
 #include <sstream>
 #include <cstdlib>
 

@@ -1,12 +1,15 @@
 #include "EquationTree.h"
 
 #include <cmath>
+#include <sstream>
 
 #include "Parser.h"
-#include "Nodes/BinominalOperatorNode.h"
-#include "Nodes/MonominalOperatorNode.h"
-#include "Nodes/VarNode.h"
-#include "Nodes/ConstNode.h"
+#include "../Tree/Nodes/BinominalOperatorNode.h"
+#include "../Tree/Nodes/MonominalOperatorNode.h"
+#include "../Tree/Nodes/VarNode.h"
+#include "../Tree/Nodes/ConstNode.h"
+#include "../Result.tpp"
+#include "../Error.h"
 #include <iostream>
 
 EquationTree::EquationTree() {
@@ -21,7 +24,7 @@ EquationTree::~EquationTree() {
     delete root;
 }
 
-std::string EquationTree::enter(const std::string& formula) {
+Result<void, Error> EquationTree::enter(const std::string& formula) {
     bool isValid = true;
     std::string correctedExpression;
 
@@ -32,15 +35,16 @@ std::string EquationTree::enter(const std::string& formula) {
     root = Parser::parse(formula, isValid, correctedExpression);
 
     if (!isValid) {
-        return "Blad: Niepoprawne wyrazenie. Zostalo naprawione. \n Poprawiona formula: " + correctedExpression;
+        return Result<void, Error>::resultFail(new Error("Blad: Niepoprawne wyrazenie. Zostalo naprawione. "
+                                                          "\nPoprawiona formula: " + correctedExpression));
     } else {
-        return "Formula zostala wczytana poprawnie.";
+        return Result<void, Error>::resultOk();
     }
 }
 
-std::string EquationTree::vars() const {
+Result<std::string, Error> EquationTree::vars() const {
     if (root == NULL) {
-        return "";
+        return Result<std::string, Error>::resultFail(new Error("Blad: Brak drzewa."));
     }
 
     std::vector<std::string> variables = getVariables();
@@ -51,29 +55,29 @@ std::string EquationTree::vars() const {
         result += variables[i];
     }
 
-    return result;
+    return Result<std::string, Error>::resultOk(result);
 }
 
-std::string EquationTree::print() const {
+Result<std::string, Error> EquationTree::print() const {
     if (root == NULL) {
-        return "";
+        return Result<std::string, Error>::resultFail(new Error("Blad: Brak drzewa."));
     }
 
-    return root->toString();
+    return Result<std::string, Error>::resultOk(root->toString());
 }
 
-double EquationTree::comp(const std::vector<double>& values) const {
+Result<double, Error> EquationTree::comp(const std::vector<double>& values) const {
     if (root == NULL) {
-        std::cout << "Blad: Brak drzewa do obliczenia." << std::endl;
-        return 0.0;
+        return Result<double, Error>::resultFail(new Error("Blad: Brak drzewa do obliczenia."));
     }
 
     std::vector<std::string> variables = getVariables();
 
     if (values.size() != variables.size()) {
-        std::cout << "Blad: Liczba podanych wartosci (" << values.size()
-                  << ") nie odpowiada liczbie zmiennych (" << variables.size() << ")." << std::endl;
-        return 0.0;
+        std::ostringstream oss;
+        oss << "Blad: Liczba podanych wartosci (" << values.size()
+            << ") nie odpowiada liczbie zmiennych (" << variables.size() << ").";
+        return Result<double, Error>::resultFail(new Error(oss.str()));
     }
 
     // Sklonuj drzewo, aby nie modyfikować oryginału
@@ -83,7 +87,7 @@ double EquationTree::comp(const std::vector<double>& values) const {
     replaceVariablesWithValues(tempRoot, variables, values);
 
     // Oblicz wartość (wszystkie VarNode zostały zamienione na ConstNode)
-    double result = tempRoot->evaluate();
+    Result<double, Error> result = tempRoot->evaluate();
 
     // Usuń tymczasowe drzewo
     delete tempRoot;
@@ -143,7 +147,7 @@ EquationTree EquationTree::operator+(const EquationTree& other) const {
     return result;
 }
 
-std::string EquationTree::join(const std::string& formula) {
+Result<void, Error> EquationTree::join(const std::string& formula) {
     bool isValid = true;
     std::string correctedExpression;
 
@@ -153,10 +157,12 @@ std::string EquationTree::join(const std::string& formula) {
     if (this->root == NULL) {
         this->root = newTree;
         if (!isValid) {
-            return "Blad: Glowne drzewo jest puste. Tworze nowe drzewo. "
-                   "\nBlad: Niepoprawne wyrazenie. Zostalo naprawione. \nPoprawiona formula: " + correctedExpression;
+            return Result<void, Error>::resultFail(
+                new Error("Blad: Glowne drzewo jest puste. Tworze nowe drzewo. "
+                          "\nBlad: Niepoprawne wyrazenie. Zostalo naprawione. \nPoprawiona formula: " + correctedExpression));
         } else {
-            return "Blad: Glowne drzewo jest puste. Zwracam nowe drzewo.";
+            return Result<void, Error>::resultFail(
+                new Error("Blad: Glowne drzewo jest puste. Zwracam nowe drzewo."));
         }
     }
 
@@ -170,11 +176,12 @@ std::string EquationTree::join(const std::string& formula) {
     newEquationTree.root = NULL;
 
     if (!isValid) {
-        return "Blad: Niepoprawne wyrazenie. Zostalo naprawione. \nPoprawiona formula: " + correctedExpression +
-            "\nDrzewo zostalo polaczone.";
+        return Result<void, Error>::resultFail(
+            new Error("Blad: Niepoprawne wyrazenie. Zostalo naprawione. \nPoprawiona formula: " + correctedExpression +
+                      "\nDrzewo zostalo polaczone."));
     }
 
-    return "Drzewo zostalo polaczone.";
+    return Result<void, Error>::resultOk();
 }
 
 Node* EquationTree::findAnyLeaf(Node* node) const {
@@ -261,12 +268,12 @@ std::vector<std::string> EquationTree::getVariables() const {
     return variables;
 }
 
-std::string EquationTree::mr() {
+Result<std::string, Error> EquationTree::mr() {
     Node* node = mostRight(root);
     if (node != NULL) {
-        return node->toString();
+        return Result<std::string, Error>::resultOk(node->toString());
     }
-    return "Blad. Nie znaleziono liscia";
+    return Result<std::string, Error>::resultFail(new Error("Blad. Nie znaleziono liscia"));
 }
 
 Node* EquationTree::mostRight(Node* node) {
