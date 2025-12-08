@@ -9,7 +9,8 @@
 class Parser {
 public:
     // Parsuje wyrażenie w notacji polskiej i zwraca korzeń drzewa
-    static Node* parse(const std::string& expression, bool& isValid, std::string& correctedExpression);
+    // Jeśli wyrażenie jest błędne, zwraca NULL i ustawia isValid na false
+    static Node* parse(const std::string& expression, bool& isValid);
 
 private:
     static bool isOperator(const std::string& token);
@@ -25,10 +26,7 @@ private:
 
     static Node* createLeafNode(const std::string& str);
 
-    // Tworzy domyślny węzeł (stała 1)
-    static Node* createDefaultNode();
-
-    static Node* parseNode(std::istringstream& iss, bool& isValid, std::ostringstream& fixedStream, bool& firstToken);
+    static Node* parseNode(std::istringstream& iss, bool& isValid);
 };
 
 

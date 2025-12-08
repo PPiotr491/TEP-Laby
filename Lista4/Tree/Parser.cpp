@@ -77,40 +77,38 @@ Node* Parser::createLeafNode(const std::string& str) {
     }
 }
 
-Node* Parser::createDefaultNode() {
-    return new ConstNode(1);
-}
-
-Node* Parser::parseNode(std::istringstream& iss, bool& isValid, std::ostringstream& fixedStream, bool& firstToken) {
+Node* Parser::parseNode(std::istringstream& iss, bool& isValid) {
     std::string token;
 
     // Sprawdź czy są jeszcze tokeny
     if (!(iss >> token)) {
         isValid = false;
-        if (!firstToken) {
-            fixedStream << " ";
-        }
-        fixedStream << "1";
-        firstToken = false;
-        return createDefaultNode();
+        return NULL;
     }
-
-    if (!firstToken) {
-        fixedStream << " ";
-    }
-    fixedStream << token;
-    firstToken = false;
 
     // Jeśli to operator, rekurencyjnie parsuj dzieci
     if (isOperator(token)) {
         int arity = getOperatorArity(token);
 
         if (arity == 1) {
-            Node* child = parseNode(iss, isValid, fixedStream, firstToken);
+            Node* child = parseNode(iss, isValid);
+            if (!isValid) {
+                delete child;
+                return NULL;
+            }
             return createUnaryOperatorNode(token, child);
         } else if (arity == 2) {
-            Node* left = parseNode(iss, isValid, fixedStream, firstToken);
-            Node* right = parseNode(iss, isValid, fixedStream, firstToken);
+            Node* left = parseNode(iss, isValid);
+            if (!isValid) {
+                delete left;
+                return NULL;
+            }
+            Node* right = parseNode(iss, isValid);
+            if (!isValid) {
+                delete left;
+                delete right;
+                return NULL;
+            }
             return createOperatorNode(token, left, right);
         }
     }
@@ -119,28 +117,30 @@ Node* Parser::parseNode(std::istringstream& iss, bool& isValid, std::ostringstre
     return createLeafNode(token);
 }
 
-Node* Parser::parse(const std::string& expression, bool& isValid, std::string& correctedExpression) {
+Node* Parser::parse(const std::string& expression, bool& isValid) {
     isValid = true;
-    correctedExpression = "";
 
     if (expression.empty() || expression.find_first_not_of(" \t\n\r") == std::string::npos) {
         isValid = false;
-        correctedExpression = "1";
-        return createDefaultNode();
+        return NULL;
     }
 
     std::istringstream iss(expression);
-    std::ostringstream fixedStream;
-    bool firstToken = true;
 
     // Parsuj rekurencyjnie od korzenia
-    Node* root = parseNode(iss, isValid, fixedStream, firstToken);
-    correctedExpression = fixedStream.str();
+    Node* root = parseNode(iss, isValid);
 
+    if (!isValid) {
+        delete root;
+        return NULL;
+    }
+
+    // Sprawdź czy nie ma nadmiarowych tokenów
     std::string extraToken;
     if (iss >> extraToken) {
         isValid = false;
-        correctedExpression = fixedStream.str();
+        delete root;
+        return NULL;
     }
 
     return root;

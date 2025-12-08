@@ -26,17 +26,16 @@ EquationTree::~EquationTree() {
 
 Result<void, Error> EquationTree::enter(const std::string& formula) {
     bool isValid = true;
-    std::string correctedExpression;
 
     // Usuń stare drzewo
     delete root;
+    root = NULL;
 
     // Parsuj nowe wyrażenie
-    root = Parser::parse(formula, isValid, correctedExpression);
+    root = Parser::parse(formula, isValid);
 
     if (!isValid) {
-        return Result<void, Error>::resultFail(new Error("Blad: Niepoprawne wyrazenie. Zostalo naprawione. "
-                                                          "\nPoprawiona formula: " + correctedExpression));
+        return Result<void, Error>::resultFail(new Error("Blad: Niepoprawne wyrazenie."));
     } else {
         return Result<void, Error>::resultOk();
     }
@@ -149,21 +148,18 @@ EquationTree EquationTree::operator+(const EquationTree& other) const {
 
 Result<void, Error> EquationTree::join(const std::string& formula) {
     bool isValid = true;
-    std::string correctedExpression;
 
     // Parsuj nowe wyrażenie
-    Node* newTree = Parser::parse(formula, isValid, correctedExpression);
+    Node* newTree = Parser::parse(formula, isValid);
+
+    if (!isValid) {
+        return Result<void, Error>::resultFail(new Error("Blad: Niepoprawne wyrazenie."));
+    }
 
     if (this->root == NULL) {
         this->root = newTree;
-        if (!isValid) {
-            return Result<void, Error>::resultFail(
-                new Error("Blad: Glowne drzewo jest puste. Tworze nowe drzewo. "
-                          "\nBlad: Niepoprawne wyrazenie. Zostalo naprawione. \nPoprawiona formula: " + correctedExpression));
-        } else {
-            return Result<void, Error>::resultFail(
-                new Error("Blad: Glowne drzewo jest puste. Zwracam nowe drzewo."));
-        }
+        return Result<void, Error>::resultFail(
+            new Error("Blad: Glowne drzewo jest puste. Tworze nowe drzewo."));
     }
 
     // Stwórz tymczasowe drzewo z nowym wyrażeniem
@@ -175,11 +171,6 @@ Result<void, Error> EquationTree::join(const std::string& formula) {
     // Zapobiegnij podwójnemu usunięciu
     newEquationTree.root = NULL;
 
-    if (!isValid) {
-        return Result<void, Error>::resultFail(
-            new Error("Blad: Niepoprawne wyrazenie. Zostalo naprawione. \nPoprawiona formula: " + correctedExpression +
-                      "\nDrzewo zostalo polaczone."));
-    }
 
     return Result<void, Error>::resultOk();
 }

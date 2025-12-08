@@ -35,20 +35,25 @@ void BinominalOperatorNode::collectVariables(std::vector<std::string>& variables
 
 Result<double, Error> BinominalOperatorNode::collectErrors() const {
     std::vector<Error*> thisErrors;
-    std::vector<Error*> leftErrors;
-    std::vector<Error*> rightErrors;
 
-    if (leftChild)
-        leftErrors = leftChild->evaluate().getErrors();
-    if (rightChild)
-        rightErrors = rightChild->evaluate().getErrors();
+    if (leftChild) {
+        Result<double, Error> leftResult = leftChild->evaluate();
+        std::vector<Error*> leftErrors = leftResult.getErrors();
 
-    for (size_t i = 0; i < leftErrors.size(); i++) {
-        thisErrors.push_back(leftErrors[i]);
+        // Klonuje błędy, aby uniknąć podwójnego usuwania
+        for (size_t i = 0; i < leftErrors.size(); i++) {
+            thisErrors.push_back(leftErrors[i]->clone());
+        }
     }
 
-    for (size_t i = 0; i < rightErrors.size(); i++) {
-        thisErrors.push_back(rightErrors[i]);
+    if (rightChild) {
+        Result<double, Error> rightResult = rightChild->evaluate();
+        std::vector<Error*> rightErrors = rightResult.getErrors();
+
+        // Klonuje błędy, aby uniknąć podwójnego usuwania
+        for (size_t i = 0; i < rightErrors.size(); i++) {
+            thisErrors.push_back(rightErrors[i]->clone());
+        }
     }
 
     return Result<double, Error>::resultFail(thisErrors);

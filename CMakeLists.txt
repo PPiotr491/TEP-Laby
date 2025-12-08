@@ -80,4 +80,5 @@ add_executable(Lista4
         Lista4/Tree/Nodes/OperatorNodes/SinOpNode.h
         Lista4/Tree/Nodes/OperatorNodes/CosOpNode.cpp
         Lista4/Tree/Nodes/OperatorNodes/CosOpNode.h
+        Lista4/Result.h
 )

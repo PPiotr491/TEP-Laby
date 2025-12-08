@@ -29,13 +29,15 @@ void MonominalOperatorNode::collectVariables(std::vector<std::string>& variables
 
 Result<double, Error> MonominalOperatorNode::collectErrors() const {
     std::vector<Error*> thisErrors;
-    std::vector<Error*> childErrors;
 
-    if (child)
-        childErrors = child->evaluate().getErrors();
+    if (child) {
+        Result<double, Error> childResult = child->evaluate();
+        std::vector<Error*> childErrors = childResult.getErrors();
 
-    for (size_t i = 0; i < childErrors.size(); i++) {
-        thisErrors.push_back(childErrors[i]);
+        // Klonuje błędy, aby uniknąć podwójnego usuwania
+        for (size_t i = 0; i < childErrors.size(); i++) {
+            thisErrors.push_back(childErrors[i]->clone());
+        }
     }
 
     return Result<double, Error>::resultFail(thisErrors);
