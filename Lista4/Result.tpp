@@ -232,4 +232,100 @@ const std::vector<E*>& Result<void, E>::getErrors() const {
 }
 
 
+// ============================================================================================
+// ||                                Specjalizacja dla <TE*, TE>                             ||
+// ============================================================================================
+template <typename TE>
+Result<TE*, TE>::Result(TE* val) {
+    value = val;
+}
+
+template <typename TE>
+Result<TE*, TE>::Result(std::vector<TE*>& errList) {
+    value = NULL;
+    for (size_t i = 0; i < errList.size(); i++) {
+        if (errList[i] != NULL)
+            errors.push_back(errList[i]);
+    }
+    errList.clear();
+}
+
+template <typename TE>
+Result<TE*, TE>::Result(const Result<TE*, TE>& other) {
+    if (other.value != NULL) {
+        value = new TE(*other.value);
+    } else {
+        value = NULL;
+    }
+
+    for (size_t i = 0; i < other.errors.size(); i++) {
+        if (other.errors[i] != NULL)
+            errors.push_back(new TE(*other.errors[i]));
+    }
+}
+
+template <typename TE>
+Result<TE*, TE>::~Result() {
+    for (size_t i = 0; i < errors.size(); i++) {
+        if (errors[i] != NULL)
+            delete errors[i];
+    }
+    errors.clear();
+}
+
+template <typename TE>
+Result<TE*, TE> Result<TE*, TE>::resultOk(TE* value) {
+
+    return Result<TE*, TE>(value);
+}
+
+template <typename TE>
+Result<TE*, TE> Result<TE*, TE>::resultFail(TE* error) {
+    std::vector<TE*> errs;
+    if (error != NULL) errs.push_back(error);
+    return Result<TE*, TE>(errs);
+}
+
+template <typename TE>
+Result<TE*, TE> Result<TE*, TE>::resultFail(std::vector<TE*>& errors) {
+    return Result<TE*, TE>(errors);
+}
+
+template <typename TE>
+Result<TE*, TE>& Result<TE*, TE>::operator=(const Result<TE*, TE>& other) {
+    if (this == &other) return *this;
+
+    if (value != NULL) delete value;
+    for (size_t i = 0; i < errors.size(); i++) delete errors[i];
+    errors.clear();
+
+    if (other.value != NULL) {
+        value = new TE(*other.value);
+    } else {
+        value = NULL;
+    }
+
+    for (size_t i = 0; i < other.errors.size(); i++) {
+        if (other.errors[i] != NULL)
+            errors.push_back(new TE(*other.errors[i]));
+    }
+
+    return *this;
+}
+
+template <typename TE>
+bool Result<TE*, TE>::isSuccess() {
+    return value != NULL;
+}
+
+template <typename TE>
+TE* Result<TE*, TE>::getValue() {
+    return value;
+}
+
+template <typename TE>
+std::vector<TE*>& Result<TE*, TE>::getErrors() {
+    return errors;
+}
+
 #endif //TEP_RESULT_TPP

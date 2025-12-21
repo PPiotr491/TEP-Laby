@@ -8,6 +8,14 @@
 #include "Error.h"
 #include "ResultSerializer.h"
 
+Result<int*, int> eTest(int value) {
+    if (value % 2 == 0) {
+        return Result<int*, int>::resultFail(new int(1));
+    }
+
+    return Result<int*, int>::resultOk(new int(2));
+}
+
 // Funkcja automatycznie zapisująca błędy do pliku errors.txt
 void saveErrorsToFile(const std::vector<Error*>& errors) {
     if (errors.empty()) return;
@@ -41,6 +49,9 @@ void printMenu() {
 }
 
 int main() {
+    std::cout << eTest(2).isSuccess() << std::endl;
+    std::cout << eTest(3).isSuccess() << std::endl;
+
     EquationTree tree;
     std::string line;
 

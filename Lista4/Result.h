@@ -62,4 +62,33 @@ class Result<void, E> {
         std::vector<E*> errors;
 };
 
+
+// ============================================================================================
+// ||                                Specjalizacja dla <TE*, TE>                             ||
+// ============================================================================================
+template <typename TE>
+class Result<TE*, TE>
+{
+public:
+    Result(const Result<TE*, TE>& other);
+    ~Result();
+
+    Result(TE* value);
+    Result(std::vector<TE*>& errors);
+
+    static Result<TE*, TE> resultOk(TE* value);
+    static Result<TE*, TE> resultFail(TE* error);
+    static Result<TE*, TE> resultFail(std::vector<TE*>& errors);
+
+    Result<TE*, TE>& operator=(const Result<TE*, TE>& other);
+
+    void copy(const Result<TE*, TE>& other);
+    bool isSuccess();
+    TE* getValue();
+    std::vector<TE*>& getErrors();
+
+private:
+    TE* value;
+    std::vector<TE*> errors;
+};
 #endif //TEP_RESULT_H
