@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
 project(TEP)
 
-set(CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD 11)
 
 # Lista 1
 add_executable(Lista1
@@ -81,4 +81,39 @@ add_executable(Lista4
         Lista4/Tree/Nodes/OperatorNodes/CosOpNode.cpp
         Lista4/Tree/Nodes/OperatorNodes/CosOpNode.h
         Lista4/Result.h
+)
+add_executable(Lista5
+        Lista5/main.cpp
+        Lista5/Result/Result.tpp
+        Lista5/Result/Error.cpp
+        Lista5/Result/Error.h
+        Lista5/Tree/Nodes/Node.cpp
+        Lista5/Tree/Nodes/Node.h
+        Lista5/Tree/EquationTree.cpp
+        Lista5/Tree/EquationTree.h
+        Lista5/Tree/Nodes/VarNode.h
+        Lista5/Tree/Nodes/VarNode.cpp
+        Lista5/Tree/Nodes/ConstNode.cpp
+        Lista5/Tree/Nodes/ConstNode.h
+        Lista5/Tree/Nodes/OperatorNodes/AddOpNode.cpp
+        Lista5/Tree/Nodes/OperatorNodes/AddOpNode.h
+        Lista5/Tree/Nodes/OperatorNodes/MinOpNode.cpp
+        Lista5/Tree/Nodes/OperatorNodes/MinOpNode.h
+        Lista5/Tree/Nodes/OperatorNodes/MultOpNode.cpp
+        Lista5/Tree/Nodes/OperatorNodes/MultOpNode.h
+        Lista5/Tree/Nodes/OperatorNodes/DivOpNode.cpp
+        Lista5/Tree/Nodes/OperatorNodes/DivOpNode.h
+        Lista5/Tree/Nodes/BinominalOperatorNode.cpp
+        Lista5/Tree/Nodes/BinominalOperatorNode.h
+        Lista5/Tree/Nodes/MonominalOperatorNode.cpp
+        Lista5/Tree/Nodes/MonominalOperatorNode.h
+        Lista5/Tree/Parser.cpp
+        Lista5/Tree/Parser.h
+        Lista5/Tree/Nodes/OperatorNodes/SinOpNode.cpp
+        Lista5/Tree/Nodes/OperatorNodes/SinOpNode.h
+        Lista5/Tree/Nodes/OperatorNodes/CosOpNode.cpp
+        Lista5/Tree/Nodes/OperatorNodes/CosOpNode.h
+        Lista5/Result/Result.h
+        Lista5/SmartPointer.tpp
+        Lista5/SmartPointer.h
 )
